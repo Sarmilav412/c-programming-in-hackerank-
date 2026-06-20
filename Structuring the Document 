@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char**** get_document(char* text) {
+    char ****document = malloc(sizeof(char****) * 5);
+
+    int p = 0, s = 0, w = 0;
+
+    document[p] = malloc(sizeof(char***) * 100);
+    document[p][s] = malloc(sizeof(char**) * 100);
+    document[p][s][w] = malloc(sizeof(char) * 100);
+
+    int char_idx = 0;
+
+    for (int i = 0;; i++) {
+        char c = text[i];
+
+        if (c == ' ' || c == '.' || c == '\n' || c == '\0') {
+            document[p][s][w][char_idx] = '\0';
+            char_idx = 0;
+
+            if (c == ' ') {
+                w++;
+                document[p][s][w] = malloc(sizeof(char) * 100);
+            }
+            else if (c == '.') {
+                w = 0;
+                s++;
+                document[p][s] = malloc(sizeof(char**) * 100);
+                document[p][s][w] = malloc(sizeof(char) * 100);
+            }
+            else if (c == '\n') {
+                w = 0;
+                s = 0;
+                p++;
+
+                document[p] = malloc(sizeof(char***) * 100);
+                document[p][s] = malloc(sizeof(char**) * 100);
+                document[p][s][w] = malloc(sizeof(char) * 100);
+            }
+            else if (c == '\0') {
+                break;
+            }
+        }
+        else {
+            document[p][s][w][char_idx++] = c;
+        }
+    }
+
+    return document;
+}
+
+char*** kth_paragraph(char**** document, int k) {
+    return document[k - 1];
+}
+
+char** kth_sentence_in_mth_paragraph(char**** document, int k, int m) {
+    return document[m - 1][k - 1];
+}
+
+char* kth_word_in_mth_sentence_of_nth_paragraph(
+    char**** document,
+    int k,
+    int m,
+    int n
+) {
+    return document[n - 1][m - 1][k - 1];
+}
